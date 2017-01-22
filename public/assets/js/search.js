@@ -6,7 +6,8 @@ document.getElementById("Search").onclick = function () {
   var fearVal = document.getElementById("fearRange").value;
   var url = "/?anger=" + angerVal +"&disgust=" + disgustVal + "&fear=" + fearVal + "&joy=" + joyVal + "&sadness=" + sadnessVal;
   console.log(url);
-  $.getJSON('/searchsong' + url, function(data){
-      console.log("It worked");
-  });
-};
+  var bestsongs = $.getJSON('/searchsong' + url, function(data){
+      var artistAndSong = data[0].artist + " - " + data[0].song;
+    });
+  console.log(artistAndSong);
+  };
