@@ -14,31 +14,58 @@ html
     header#header.alt
       .inner
         h1 Project Mood
-        p
-          | A webapp that will pick the perfect music for your mood
+        p A webapp that will pick the perfect music for your mood
     // Wrapper
     #wrapper
       // Banner
       section#intro.main
         span.icon.fa-music.major
-        h2 Let me know what you're looking for
-          h3 Joy
+        h2
+          | Let me know what you're looking for
+          h3
+            | Joy
             input#joyRange(type='range', value='50')
-          h3 Anger
+          h3
+            | Anger
             input#angerRange(type='range', value='50')
-          h3 Sadness
+          h3
+            | Sadness
             input#sadnessRange(type='range', value='50')
-          h3 Disgust
+          h3
+            | Disgust
             input#disgustRange(type='range', value='50')
-          h3 Fear
+          h3
+            | Fear
             input#fearRange(type='range', value='50')
         ul.actions
           li
-            a.button.big(href='#', id='Search') Search
-            article.item
-              header
-                #player
-
+            a.button.big#searchMoodMusic Search
+        article.item
+          header
+            #player
+          
+        
+      // CTA
+      //section#cta.main.special
+      //  h2 Etiam veroeros lorem
+      //  p
+       //   | Phasellus ac augue ac magna auctor tempus proin
+        //  br
+       //   |             accumsan lacus a nibh commodo in pellentesque dui
+        //  br
+        //  |             in hac habitasse platea dictumst.
+       // ul.actions
+         // li
+           // a.button.big(href='#') Get Started
+      // Main
+      //
+        <section id="main" class="main">
+        <header>
+        <h2>Lorem ipsum dolor</h2>
+        </header>
+        <p>Fusce malesuada efficitur venenatis. Pellentesque tempor leo sed massa hendrerit hendrerit. In sed feugiat est, eu congue elit. Ut porta magna vel felis sodales vulputate. Donec faucibus dapibus lacus non ornare. Etiam eget neque id metus gravida tristique ac quis erat. Aenean quis aliquet sem. Ut ut elementum sem. Suspendisse eleifend ut est non dapibus. Nulla porta, neque quis pretium sagittis, tortor lacus elementum metus, in imperdiet ante lorem vitae ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam eget neque id metus gravida tristique ac quis erat. Aenean quis aliquet sem. Ut ut elementum sem. Suspendisse eleifend ut est non dapibus. Nulla porta, neque quis pretium sagittis, tortor lacus elementum metus, in imperdiet ante lorem vitae ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+        </section>
+      // Footer
       footer#footer
         p.copyright
           | © Untitled. Design:
@@ -49,21 +76,36 @@ html
     // Scripts
     script(src='assets/js/jquery.min.js')
     script(src='assets/js/skel.min.js')
-    script(src='assets/js/genSongs.js')
-    script(src='assets/js/search.js')
     script(src='assets/js/util.js')
     script(src='assets/js/main.js')
     script.
-            var SEARCH_QUERY_HERE = "donald trump";
             var player;
             var resVidId = "";
             function init(){
+                
+            }
+
+            var searchButton = document.getElementById("searchMoodMusic");
+            searchButton.addEventListener("click",function(){ 
+            if(player){
+                 
+                var joyVal = document.getElementById("joyRange").value;
+                var angerVal = document.getElementById("angerRange").value;
+                var sadnessVal = document.getElementById("sadnessRange").value;
+                var disgustVal = document.getElementById("disgustRange").value;
+                var fearVal = document.getElementById("fearRange").value;
+                var url = "/?anger=" + angerVal +"&disgust=" + disgustVal + "&fear=" + fearVal + "&joy=" + joyVal + "&sadness=" + sadnessVal;
+                var bestsongs = $.getJSON('/searchsong' + url, function(data){
+                var artistAndSong = data[0].artist+ " " + data[0].song;
+                artistAndSong = artistAndSong.replace(/[.,\/#!$%\^&\*;:"'{}=\-_`~()]/g,"");
+  
+
                 gapi.client.setApiKey("AIzaSyAQdnRLXwWEQLrzSIiSVlA43xJiGCYjbKQ");
                 gapi.client.load("youtube", "v3", function(){
                 var request = gapi.client.youtube.search.list({
                 part: "snippet",
                 type: "video",
-                q: encodeURIComponent(SEARCH_QUERY_HERE).replace(/%20/g, "+"),
+                q: artistAndSong,
                 maxResults: 1,
                 order: "viewCount"
                 });
@@ -71,18 +113,18 @@ html
                 var results = response.result;
                 $.each(results.items, function(index,item){
                 resVidId=item.id.videoId;
-                });
-                });
-                });
-            }
 
-            var searchButton = document.getElementById("Search");
-            searchButton.addEventListener("click",function(){
-            if(player){
-              player.loadVideoById({'videoId': resVidId,
+                player.loadVideoById({'videoId': resVidId,
                'startSeconds': 5,
                'endSeconds': 60,
                'suggestedQuality': 'large'});
+
+                });
+                });
+                });
+                });
+
+              
             }
             });
     script(src='https://apis.google.com/js/client.js?onload=init')
@@ -104,7 +146,7 @@ html
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
             }
-            });
+            }); 
             }
 
             // 4. The API will call this function when the video player is ready.
@@ -125,3 +167,8 @@ html
             function stopVideo() {
             player.stopVideo();
             }
+
+
+
+
+  
